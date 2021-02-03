@@ -1,5 +1,9 @@
 package com.dagnachew.toDoListApi.service;
 
+import java.util.Date;
+
+import javax.naming.AuthenticationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +30,23 @@ private static final Logger logger = LogManager.getLogger(TaskService.class);
 			throw e;
 		}
 	}
+	
+	public Iterable<Task> getTaskByDate(Date startTime) throws Exception {
+		try {
+			return repo.findAll(startTime);
+		} catch (Exception e) {
+			logger.error("Exception occurred while trying to retrieve task: " + startTime, e);
+			throw e;
+		}
+	}
+	
+//	public Task findAllByDateBetween(Date startTime) throws AuthenticationException {
+//		Task foundTask = repo.findAllByDateBetween(startTime);
+//		if (foundTask != null) {
+//			return foundTask;
+//		}
+//		throw new AuthenticationException("No task matches the given dates.");
+//	}
 	
 	public Iterable<Task> getTasks() {
 		return repo.findAll();

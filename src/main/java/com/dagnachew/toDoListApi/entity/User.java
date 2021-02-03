@@ -2,10 +2,13 @@ package com.dagnachew.toDoListApi.entity;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,8 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO )
+	
 	private long id;
 	private String firstName;
 	private String lastName;
@@ -24,6 +26,8 @@ public class User {
 	@JsonIgnore
 	private Set<Task> tasks;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long getid() {
 		return id;
 	}
@@ -64,7 +68,10 @@ public class User {
 		return hash;
 	}
 
-	@ManyToMany(mappedBy = "tasks")
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "planning", 
+		joinColumns = @JoinColumn(name = "taskId", referencedColumnName = "id"), 
+		inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
 	public Set<Task> getTasks() {
 		return tasks;
 	}

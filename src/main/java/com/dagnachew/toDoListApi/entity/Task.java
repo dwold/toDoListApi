@@ -3,15 +3,11 @@ package com.dagnachew.toDoListApi.entity;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
 import com.dagnachew.toDoListApi.util.Category;
 import com.dagnachew.toDoListApi.util.Priority;
 import com.dagnachew.toDoListApi.util.TaskStatus;
@@ -22,7 +18,9 @@ public class Task {
 
 	private long id;
 	private String activity;
+//	@Temporal(TemporalType.TIMESTAMP)
 	private Date startTime;
+//	@Temporal(TemporalType.TIMESTAMP)
 	private Date endTime;
 	
 	@JsonIgnore
@@ -95,10 +93,7 @@ public class Task {
 		this.status = status;
 	}
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "planning", 
-		joinColumns = @JoinColumn(name = "taskId", referencedColumnName = "id"), 
-		inverseJoinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"))
+	@ManyToMany(mappedBy = "tasks")
 	public Set<User> getUsers() {
 		return users;
 	}

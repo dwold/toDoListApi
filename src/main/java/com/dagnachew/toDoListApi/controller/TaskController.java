@@ -1,6 +1,9 @@
 package com.dagnachew.toDoListApi.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +37,25 @@ public class TaskController {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@RequestMapping(value="/date/{startTime}", method=RequestMethod.GET)
+	public ResponseEntity<Object> getTask2(@PathVariable("startTime") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime) {
+//	public ResponseEntity<Object> getTask2(@PathVariable Date startTime) {
+		try {
+			return new ResponseEntity<Object>(service.getTaskByDate(startTime), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+//	@RequestMapping(value="/date", method=RequestMethod.GET)
+//	public ResponseEntity<Object> browseTaskByDate(@RequestBody Date startTime) {
+//		try {
+//			return new ResponseEntity<Object>(service.findAllByDateBetween(startTime), HttpStatus.OK);
+//		} catch (Exception e) {
+//			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+//		}
+//	}
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<Object> getTasks() {
