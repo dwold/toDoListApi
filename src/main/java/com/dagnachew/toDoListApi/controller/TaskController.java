@@ -1,6 +1,7 @@
 package com.dagnachew.toDoListApi.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,61 +30,10 @@ public class TaskController {
 		return new ResponseEntity<Object>(service.creatTask(task), HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public ResponseEntity<Object> getTask(@PathVariable Long id) {
-		try {
-			return new ResponseEntity<Object>(service.getTaskById(id), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
-	}
-	
-	@RequestMapping(value="/date/{startTime}", method=RequestMethod.GET)
-	public ResponseEntity<Object> getTask2(@PathVariable("startTime") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startTime) {
-//	public ResponseEntity<Object> getTask2(@PathVariable Date startTime) {
-		try {
-			return new ResponseEntity<Object>(service.getTaskByDate(startTime), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
-	}
-	
-//	@RequestMapping(value="/date", method=RequestMethod.GET)
-//	public ResponseEntity<Object> browseTaskByDate(@RequestBody Date startTime) {
-//		try {
-//			return new ResponseEntity<Object>(service.findAllByDateBetween(startTime), HttpStatus.OK);
-//		} catch (Exception e) {
-//			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
-//		}
-//	}
-	
-	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<Object> getTasks() {
-		return new ResponseEntity<Object>(service.getTasks(), HttpStatus.OK);
-	}
-	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Object> updateTask(@RequestBody Task task, @PathVariable Long id) {
 		try {
 			return new ResponseEntity<Object>(service.updateTask(task, id), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
-	}
-	
-	@RequestMapping(value="/status/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Object> updateTaskStatus(@RequestBody TaskStatus status, @PathVariable Long id) {
-		try {
-			return new ResponseEntity<Object>(service.updateTaskStatus(id, status), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
-	}
-	
-	@RequestMapping(value="/priority/{id}", method=RequestMethod.PUT)
-	public ResponseEntity<Object> updateTaskPriority(@RequestBody Priority priority, @PathVariable Long id) {
-		try {
-			return new ResponseEntity<Object>(service.updateTaskPriority(id, priority), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
@@ -94,6 +44,49 @@ public class TaskController {
 		try {
 			service.removeTask(id);
 			return new ResponseEntity<Object>("Successfully deleted user with id: " + id, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public ResponseEntity<Object> getTask(@PathVariable Long id) {
+		try {
+			return new ResponseEntity<Object>(service.getTaskById(id), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public ResponseEntity<Object> getTasks() {
+		return new ResponseEntity<Object>(service.getTasks(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/date/{start}/{end}", method=RequestMethod.GET)
+	public List<Task> getTaskByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date start, 
+			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date end) {
+			return service.getTaskByDate(start, end);
+	}
+
+	@RequestMapping(value="/priority/{id}/{priority}", method=RequestMethod.PUT)
+	public ResponseEntity<Object> updateTaskPriority(@PathVariable Long id, @PathVariable Priority priority) {
+		try {
+			return new ResponseEntity<Object>(service.updateTaskPriority(id, priority), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(value="/priority/{priority}", method=RequestMethod.GET)
+	public List<Task> getTaskByPriority(@PathVariable Priority priority) {
+			return service.getTaskByPriority(priority);
+	}
+	
+	@RequestMapping(value="/status/{id}/{status}", method=RequestMethod.PUT)
+	public ResponseEntity<Object> updateTaskStatus(@PathVariable Long id, @PathVariable TaskStatus status) {
+		try {
+			return new ResponseEntity<Object>(service.updateTaskStatus(id, status), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}

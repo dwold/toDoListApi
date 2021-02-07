@@ -49,15 +49,6 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.POST)
-	public ResponseEntity<Object> assignUser(@RequestBody Set<Long> taskIds, @PathVariable Long id) {
-		try {
-			return new ResponseEntity<Object>(service.assignUser(taskIds, id), HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<Object>(e, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Object> getUser(@PathVariable Long id) {
 		try {
@@ -88,6 +79,15 @@ public class UserController {
 			return new ResponseEntity<Object>("Successfully deleted user with id: " + id, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	@RequestMapping(value="/{id}/assign", method=RequestMethod.POST)
+	public ResponseEntity<Object> assignUser(@RequestBody Set<Long> taskIds, @PathVariable Long id) {
+		try {
+			return new ResponseEntity<Object>(service.assignUser(taskIds, id), HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<Object>(e, HttpStatus.BAD_REQUEST);
 		}
 	}
 	

@@ -1,14 +1,12 @@
 package com.dagnachew.toDoListApi.service;
 
 import java.util.Date;
-
-import javax.naming.AuthenticationException;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.dagnachew.toDoListApi.entity.Task;
 import com.dagnachew.toDoListApi.repository.TaskRepository;
 import com.dagnachew.toDoListApi.util.Priority;
@@ -31,23 +29,6 @@ private static final Logger logger = LogManager.getLogger(TaskService.class);
 		}
 	}
 	
-	public Iterable<Task> getTaskByDate(Date startTime) throws Exception {
-		try {
-			return repo.findAll(startTime);
-		} catch (Exception e) {
-			logger.error("Exception occurred while trying to retrieve task: " + startTime, e);
-			throw e;
-		}
-	}
-	
-//	public Task findAllByDateBetween(Date startTime) throws AuthenticationException {
-//		Task foundTask = repo.findAllByDateBetween(startTime);
-//		if (foundTask != null) {
-//			return foundTask;
-//		}
-//		throw new AuthenticationException("No task matches the given dates.");
-//	}
-	
 	public Iterable<Task> getTasks() {
 		return repo.findAll();
 	}
@@ -69,6 +50,18 @@ private static final Logger logger = LogManager.getLogger(TaskService.class);
 		}
 	}
 	
+	public Task updateTaskPriority(Long id, Priority priority) throws Exception {
+		
+		try {
+			Task oldTask = repo.findOne(id);
+			oldTask.setPriority(priority);
+			return repo.save(oldTask);
+		} catch (Exception e) {
+			logger.error("Exception occurred while trying to update task priority: " + id, e);
+			throw new Exception("Unable to update task priority.");
+		}
+	}
+	
 	public Task updateTaskStatus(Long id, TaskStatus status) throws Exception {
 		try {
 			Task oldTask = repo.findOne(id);
@@ -80,17 +73,6 @@ private static final Logger logger = LogManager.getLogger(TaskService.class);
 		}
 	}
 	
-	public Task updateTaskPriority(Long id, Priority priority) throws Exception {
-		try {
-			Task oldTask = repo.findOne(id);
-			oldTask.setPriority(priority);
-			return repo.save(oldTask);
-		} catch (Exception e) {
-			logger.error("Exception occurred while trying to update task priority: " + id, e);
-			throw new Exception("Unable to update task priority.");
-		}
-	}
-	
 	public void removeTask(Long id) throws Exception {
 		try {
 			repo.delete(id);
@@ -98,6 +80,13 @@ private static final Logger logger = LogManager.getLogger(TaskService.class);
 			logger.error("Exception occurred while trying to delete task: " + id, e);
 			throw new Exception("Unable to delete task.");
 		}
+	}
+	public List<Task> getTaskByDate(Date start, Date end) {
+		return repo.findByStartTimeBetween(start, end);
+	}
+
+	public List<Task> getTaskByPriority(Priority priority) {
+		return repo.findByPriority(priority);
 	}
 	
 }

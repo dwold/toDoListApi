@@ -18,18 +18,16 @@ public class Task {
 
 	private long id;
 	private String activity;
-//	@Temporal(TemporalType.TIMESTAMP)
+	
 	private Date startTime;
-//	@Temporal(TemporalType.TIMESTAMP)
+
 	private Date endTime;
 	
 	@JsonIgnore
 	private Category category;
 	
-	@JsonIgnore
 	private Priority priority;
 	
-	@JsonIgnore
 	private TaskStatus status;
 	
 	@JsonIgnore
